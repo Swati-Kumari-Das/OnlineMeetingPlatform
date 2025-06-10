@@ -3,7 +3,9 @@ import {createServer} from 'node:http';
 import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import cors from "cors";
-import connectToSocket from './src/controllers/SocketManager.js';
+import userRoutes from './routes/users.routes.js';
+import connectToSocket from './controllers/SocketManager.js';
+import crypto from 'crypto';
 
 const app=express();
 const server=createServer(app);
@@ -15,10 +17,13 @@ app.use(cors());
 app.use(express.json({limit:"40kb"}));
 app.use(express.urlencoded({limit:"40kb",extended:true}));
 
+app.use("/api/v1/users",userRoutes);
+// app.use("/api/v2/users",newUserRoutes);
 
 const start=async()=>{
-    const connectionDb=await mongoose.connect("mongodb+srv://swatikumaridas1111:%23MeetingPlatform2025%23@cluster0.ipl3aj0.mongodb.net/")
-
+    
+     const connectionDb=await mongoose.connect("mongodb+srv://swatikumaridas1111:%23MeetingPlatform2025%23@cluster0.ipl3aj0.mongodb.net/")
+  
     console.log(`MONGO Connected DB Host:${connectionDb.connection.host}`)
     server.listen(app.get("port"),()=>{
         console.log("Server is running on port 8000");
