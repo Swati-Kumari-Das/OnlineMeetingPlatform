@@ -15,11 +15,14 @@ const login =async(req,res)=>{
         if(!user){
             return res.status(httpStatus.NOT_FOUND).json({message:"User not found"})
         }
-        if(bcrypt.compare(password,user.password)){
+        let isPasswordCorrect=await bcrypt.compare(password,user.password)
+        if(isPasswordCorrect){
            let token=crypto.randomBytes(20).toString("hex");
            user.token=token;
            await user.save();
            return res.status(httpStatus.OK).json({token:token})
+        }else{
+            return res.status(httpStatus.UNAUTHORIZED).json({message:"Invalid Username or Password"})
         }
     }
     catch(e){
