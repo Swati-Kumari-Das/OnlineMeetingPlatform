@@ -1,4 +1,5 @@
 import React, { useEffect, useState ,useRef} from 'react'
+import { useNavigate } from 'react-router-dom';
 
 
 import { IconButton, Input,Button,TextField,Badge} from '@mui/material';
@@ -34,11 +35,11 @@ export default function VideoMeet() {
     let [video,setVideo]=useState([]);
     let[audio,setAudio]=useState();
     let[screen,setScreen]=useState();
-    let[showModal,setModal]=useState();
+    let[showModal,setModal]=useState(true);
     let[screenAvailable,setScreenAvailable]=useState();
     let[messages,setMessages]=useState([]);
     let[message,setMessage]=useState("");
-    let[newMessages,setNewMessages]=useState(0);
+    let[newMessages,setNewMessages]=useState(3);
     let[askForUsername,setAskForUserName]=useState(true);
     let[username,setUsername]=useState("");
 
@@ -200,9 +201,16 @@ useEffect(()=>{
  }
 
  //TODO addMessage
- let addMessage=()=>{
-
+ let addMessage=(data,sender,socketIdSender)=>{
+     setMessages((prevMessages)=>[
+        ...prevMessages,
+        {sender:sender,data:data}
+     ])
+     if(socketIdSender !== socketIdRef.current){
+        setNewMessages((prevMessages)=> prevMessages+1)
+     }
  }
+
 let connectToSocketServer=()=>{
     //socketRef.current=isObjectIdOrHexString.connect(server_url,{secure:false})
     socketRef.current = io(server_url, { secure: false });
@@ -303,6 +311,9 @@ let getMedia=()=>{
     
     connectToSocketServer();
 }
+
+let routeTo= useNavigate();
+
 let connect=()=>{
     setAskForUserName(false);
     getMedia();
@@ -388,6 +399,20 @@ useEffect(()=>{
 let handleScreen=()=>{
     setScreen(!screen);
 }
+
+let sendMessage = () =>{
+    socketRef.current.emit("chat-message",message,username);
+    setMessage("");
+}
+
+let handleEndCall=()=>{
+    try{
+        let tracks=localVideoRef.current.srcObject.getTracks();
+        tracks.forEach(track=> track.stop())
+    }catch (e){ }
+    routeTo("/home")
+}
+
   return (
     <div>
      {askForUsername==true ?
@@ -400,11 +425,39 @@ let handleScreen=()=>{
       </div>
      </div>: 
      <div className={styles.meetVideoContainer}>
+        
+        {showModal ? <div className={styles.chatRoom}>
+          <div className={styles.chatContainer}>
+          <h1>Chat</h1>
+          <div className={styles.chattingDisplay}>
+
+            {messages.length >0 ? messages.map((item,index) =>{
+                return(
+                    <div style={{marginBottom:"20px"}} key={index}>
+                        <p style={{fontWeight :"bold"}}>{item.sender}</p>
+                        <p>{item.data}</p>
+                    </div>
+                )
+            }): <p>No Messages Yet</p> }
+          </div>
+        
+         <div className={styles.chattingArea}>
+
+         <TextField value={message} onChange={ e => setMessage(e.target.value)} id="outlined-basic" label="Enter Your Chat" variant="outlined" />
+         <Button variant='contained' onClick={sendMessage}>Send</Button>
+         </div>
+         
+          </div>
+         
+         
+        </div>:<></>}
+       
+
         <div className={styles.buttonContainers}>
         <IconButton onClick={handleVideo} style={{ color: "white" }}>
                             {(video === true) ? <VideocamIcon /> : <VideocamOffIcon />}
                         </IconButton>
-                        <IconButton style={{ color: "red" }}>
+                        <IconButton onClick={handleEndCall} style={{ color: "red" }}>
                             <CallEndIcon  />
                         </IconButton>
                         <IconButton onClick={handleAudio} style={{ color: "white" }}>
