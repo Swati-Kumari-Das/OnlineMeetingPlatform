@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import React, { useState , useContext } from 'react'
 import withAuth from '../utils/withAuth'
 import { useNavigate } from 'react-router-dom'
 import "../App.css";
@@ -8,12 +8,16 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import styles from "../styles/videoComponent.module.css";
 
 import {TextField} from '@mui/material';
+import { AuthContext } from '../contexts/AuthContext';
 
 function HomeComponent() {
 
     let navigate=useNavigate();
     const [meetingCode,setMeetingCode]=useState("");
+
+    const {addToUserHistory}=useContext(AuthContext);
     let handleJoinVideoCall=async()=>{
+        await addToUserHistory(meetingCode)
         navigate(`/${meetingCode}`)
     }
   return (
@@ -23,7 +27,11 @@ function HomeComponent() {
             <h3>VideoCallBuddy!</h3>
         </div>
         <div style={{display:"flex", alignItems:"center",gap: "10px" }}>
-             <IconButton>
+             <IconButton onClick={
+              ()=>{
+                navigate("/history")
+              }
+             }>
                 <RestoreIcon />
              </IconButton>
              <p style={{ margin: 0 }}>History</p>
