@@ -191,6 +191,7 @@ export default function VideoMeetComponent() {
         })
     }
 
+   
     let getUserMedia = () => {
         if ((video && videoAvailable) || (audio && audioAvailable)) {
             navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
@@ -385,11 +386,18 @@ export default function VideoMeetComponent() {
 
     let handleVideo = () => {
         setVideo(!video);
-        // getUserMedia();
+       // getUserMedia();
     }
+
+   
+    
+
+   
+    
+
     let handleAudio = () => {
         setAudio(!audio)
-        // getUserMedia();
+       //  getUserMedia();
     }
 
     useEffect(() => {
@@ -406,7 +414,7 @@ export default function VideoMeetComponent() {
             let tracks = localVideoref.current.srcObject.getTracks()
             tracks.forEach(track => track.stop())
         } catch (e) { }
-        window.location.href = "/"
+        window.location.href = "/home"
     }
 
     let openChat = () => {

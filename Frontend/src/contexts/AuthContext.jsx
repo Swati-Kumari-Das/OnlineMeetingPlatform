@@ -1,3 +1,5 @@
+
+
 import axios from "axios";
 import httpStatus from "http-status";
 import { createContext, useContext, useState } from "react";
@@ -8,8 +10,9 @@ import { useNavigate } from "react-router-dom";
 export const AuthContext = createContext({});
 
 const client = axios.create({
-    // baseURL: `${server}/api/v1/users`
-    baseURL:"http://localhost:8000/api/v1/users"
+   // baseURL: `${server}/api/v1/users`
+   baseURL:"http://localhost:8000/api/v1/users"
+
 })
 
 
@@ -84,8 +87,6 @@ export const AuthProvider = ({ children }) => {
             throw e;
         }
     }
-
-
 
 
     const data = {
