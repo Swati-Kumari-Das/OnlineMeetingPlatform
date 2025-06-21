@@ -1,4 +1,4 @@
-# Online Meeting Platform 🎥💬  Live Link: https://letsvideocall-r73x.onrender.com/
+# Online Meeting Platform 🎥💬
 
 A real-time video conferencing web application built using **React**, **WebRTC**, and **Socket.IO**. It allows multiple users to join a video call room, share their audio/video/screen, and chat live.
 
@@ -6,6 +6,7 @@ A real-time video conferencing web application built using **React**, **WebRTC**
 
 ## 🚀 Features
 
+  Live Link: https://letsvideocall-r73x.onrender.com/
 - 🔒 **Lobby system** — Users enter their name to join the meeting
 - 📹 **Video conferencing** with live peer-to-peer streaming (via WebRTC)
 - 🎤 **Audio/video toggles**
